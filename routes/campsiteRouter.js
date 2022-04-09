@@ -186,11 +186,14 @@ campsiteRouter
           if (req.body.text) {
             campsite.comments.id(req.params.commentId).text = req.body.text;
           }
-          campsite.save().then((campsite) => {
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json(campsite);
-          });
+          campsite
+            .save()
+            .then((campsite) => {
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.json(campsite);
+            })
+            .catch((err) => next(err));
         } else if (!campsite) {
           err = new Error(`Campsite ${req.params.campsiteId} not found`);
           err.status = 404;
@@ -206,20 +209,22 @@ campsiteRouter
   .delete((req, res, next) => {
     Campsite.findById(req.params.campsiteId)
       .then((campsite) => {
-        if (campsite) {
-          for (let i = campsite.comments.length - 1; i >= 0; i--) {
-            campsite.comments.id(campsite.comments[i]._id).remove();
-          }
+        if (campsite && campsite.comments.id(req.params.commentId)) {
+          campsite.comments.id(req.params.commentId).remove();
           campsite
             .save()
             .then((campsite) => {
               res.statusCode = 200;
               res.setHeader("Content-Type", "application/json");
-              res.json(campsite.comments);
+              res.json(campsite);
             })
             .catch((err) => next(err));
-        } else {
+        } else if (!campsite) {
           err = new Error(`Campsite ${req.params.campsiteId} not found`);
+          err.status = 404;
+          return next(err);
+        } else {
+          err = new Error(`Comment ${req.params.commentId} not found`);
           err.status = 404;
           return next(err);
         }
