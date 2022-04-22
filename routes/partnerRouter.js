@@ -11,9 +11,7 @@ partnerRouter
   .get(cors.cors, (req, res, next) => {
     Partner.find()
       .then((partners) => {
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(partners);
+        res.status(200).json(partners);
       })
       .catch((err) => next(err));
   })
@@ -24,9 +22,7 @@ partnerRouter
     (req, res, next) => {
       Partner.create(req.body)
         .then((partner) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(partner);
+          res.status(200).json(partner);
         })
         .catch((err) => next(err));
     }
@@ -36,8 +32,7 @@ partnerRouter
     authenticate.verifyUser,
     authenticate.verifyAdmin,
     (req, res) => {
-      res.statusCode = 403;
-      res.end("PUT operation not supported on /partners");
+      res.status(403).end("PUT operation not supported on /partners");
     }
   )
   .delete(
@@ -47,9 +42,7 @@ partnerRouter
     (req, res, next) => {
       Partner.deleteMany()
         .then((response) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(response);
+          res.status(200).json(response);
         })
         .catch((err) => next(err));
     }
@@ -61,9 +54,7 @@ partnerRouter
   .get(cors.cors, (req, res, next) => {
     Partner.findById(req.params.partnerId)
       .then((partner) => {
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "application/json");
-        res.json(partner);
+        res.status(200).json(partner);
       })
       .catch((err) => next(err));
   })
@@ -72,10 +63,11 @@ partnerRouter
     authenticate.verifyUser,
     authenticate.verifyAdmin,
     (req, res) => {
-      res.statusCode = 403;
-      res.end(
-        `Post operation not supported on /partners/${req.params.partnerId}`
-      );
+      res
+        .status(403)
+        .end(
+          `Post operation not supported on /partners/${req.params.partnerId}`
+        );
     }
   )
   .put(
@@ -91,9 +83,7 @@ partnerRouter
         { new: true }
       )
         .then((partner) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(partner);
+          res.status(200).json(partner);
         })
         .catch((err) => next(err));
     }
@@ -105,9 +95,7 @@ partnerRouter
     (req, res, next) => {
       Partner.findByIdAndDelete(req.params.partnerId)
         .then((response) => {
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-          res.json(response);
+          res.status(200).json(response);
         })
         .catch((err) => next(err));
     }
