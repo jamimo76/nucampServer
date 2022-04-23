@@ -69,6 +69,7 @@ router.post(
   passport.authenticate("local"),
   (req, res) => {
     const token = authenticate.getToken({ _id: req.user._id });
+
     res.status(200).json({
       success: true,
       token: token,
