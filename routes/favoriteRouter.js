@@ -7,7 +7,7 @@ const favoriteRouter = express.Router();
 
 favoriteRouter
   .route("/")
-  .options(cors.corsWithOptions, (req, res) => sendStatus(200))
+  .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
   .get(cors.cors, authenticate.verifyUser, (req, res, next) => {
     Favorite.find({ user: req.user._id })
       .populate("user")
@@ -70,7 +70,7 @@ favoriteRouter
   });
 favoriteRouter
   .route("/:campsiteId")
-  .options(cors.corsWithOptions, (req, res) => sendStatus(200))
+  .options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
   .get(cors.cors, authenticate.verifyUser, (req, res) => {
     res.status(403).end("GET not supported on /favorites/:campsiteId");
   })
